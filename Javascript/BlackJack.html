@@ -1,0 +1,100 @@
+<meta charset="utf-8">
+<script>
+//Введем функцию для рандомного выбора карт для сдачи
+function getRandomInt(min, max) {
+	return Math.floor(Math.random()*(max-min+1)) + min;
+}
+//Сама функция сдачи карт
+function getCard() {
+	var cards = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+	return cards[getRandomInt(0, cards.length - 1)];
+}
+//Функция подсчета суммы карт на руках
+function getSum(arr) {
+	var sum = 0;
+	for(i=0; i<arr.length; i++) {
+		if (arr[i] != 'A')	{
+			if (isNaN(parseInt(arr[i]))) {sum = sum + 10;}
+			else {sum = sum + parseInt(arr[i]);}
+		}
+	}
+
+	for (i=0; i<arr.length; i++) {
+		if (arr[i] == 'A') {
+			if (sum > 10) {sum = sum +1;}
+			else {sum = sum + 11;}
+		}
+	}
+return sum;
+}
+
+//Функция вывода текущих карт на руках
+function getStatus() {
+	return 'Дилер: ' + dealer.join(' ') + ' Игрок: ' + player.join(' ') + '.';
+}
+
+
+
+var answer1 = '';
+var answer2 = '';
+alert('Приветствуем Вас в игре Black Jack!');
+do {
+	answer1 = prompt('Хотите сыграть? 1 - да, иначе - нет');
+		if (answer1 == '1') {
+			var dealer = [getCard()];
+			var player = [getCard(), getCard()];
+			if (getSum(player) == 21) {
+				alert('Невероятная удача! Black Jack на раздаче! ' + getStatus());
+			}
+			else {
+				do {
+				answer2 = prompt(getStatus() + ' Хотите еще карту? 1 - да, иначе - нет');
+
+				//Сдаем карту игроку либо прекращаем игру
+				if (answer2 == '1') {
+					player.push(getCard());
+
+					//Проверка перебора или выигрыша
+					if (getSum(player) == 21) {
+						alert('Поздравляю, вы выиграли! '+getStatus());
+						break;
+					}
+					else if (getSum(player) > 21) {
+						alert('Перебор(  ' + getStatus());
+						break;
+					}
+				}
+				//Dealer
+					else {
+						//Сдаем карты дилеру
+						while (getSum(dealer) < 17) {
+							dealer.push(getCard());
+						}
+						//Проверяем результат
+						if (getSum(dealer)==21) {
+							alert('У дилера Black Jack! Т_Т ' + getStatus());
+						}
+						else if (getSum(dealer)>21) {
+							alert('У дилера перебор! )) ' + getStatus());
+						}
+						else if (getSum(dealer)==getSum(player)) {
+							alert('Ничья! ' + getStatus());
+						}
+						else if (getSum(player)>getSum(dealer)) {
+							alert('Выигрыш! :)) ' + getStatus());
+						}
+						else {
+							alert('Проигрыш :((( ' + getStatus());
+						}
+					}
+
+				} while (answer2 == '1');
+			}
+		}
+		else {
+			alert('Всего доброго!')
+		}
+} while (answer1 == '1');
+
+
+</script>
